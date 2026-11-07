@@ -31,35 +31,37 @@ Kinetix connects to **Gmail, Slack, Google Calendar, Notion, Jira and Linear**, 
 ```
 src/
   lib/
-    connectors/      Gmail, Calendar (Google OAuth), Slack, Notion, Jira, Linear → normalized Signals
+    connectors/       Gmail, Calendar (Google OAuth), Slack, Notion, Jira, Linear → normalized Signals
     engine/
-      noise.ts       explainable noise filter
-      extract.ts     asks → task candidates (+ auto-close detection)
-      deadline.ts    natural-language deadlines, timezone + weekend aware
-      prioritize.ts  merge duplicates across tools, score, bucket
-      risks.ts       risk detectors with evidence
-      brief.ts       meeting briefs
-      drafts.ts      template drafts (offline engine)
-      workspace.ts   pipeline orchestration → WorkspaceSnapshot
+      noise.js        explainable noise filter
+      extract.js      asks → task candidates (+ auto-close detection)
+      deadline.js     natural-language deadlines, timezone + weekend aware
+      prioritize.js   merge duplicates across tools, score, bucket
+      risks.js        risk detectors with evidence
+      brief.js        meeting briefs
+      drafts.js       template drafts (offline engine)
+      workspace.js    pipeline orchestration → WorkspaceSnapshot
     agent/
-      tools.ts       tool schemas + executors shared by both engines
-      claude.ts      streaming Claude tool-use loop
-      offline.ts     rule-based agent
-      triage.ts      Claude structured-output triage for live data
-    demo/data.ts     the fictional Quillon workspace (dates generated relative to today)
-    source.ts        load demo/live snapshots (live is cached for 2 min)
-    auth.ts          access-key auth for live mode
+      tools.js        tool schemas + executors shared by both engines
+      claude.js       streaming Claude tool-use loop
+      offline.js      rule-based agent
+      triage.js       Claude structured-output triage for live data
+    demo/data.js      the fictional Quillon workspace (dates generated relative to today)
+    types.js          the data model, documented with JSDoc
+    source.js         load demo/live snapshots (live is cached for 2 min)
+    auth.js           access-key auth for live mode
+  components/         React components: Dashboard, Chat, Markdown, LoginForm, ui
   app/
-    page.tsx         landing page
-    demo/            demo dashboard
-    app/             live dashboard + setup guide + login
-    api/workspace    GET snapshot
-    api/chat         POST → NDJSON stream of agent events
-    api/auth         unlock / lock live mode
-tests/engine.test.ts
+    page.jsx          landing page
+    demo/             demo dashboard
+    app/              live dashboard + setup guide + login
+    api/workspace     GET snapshot
+    api/chat          POST → NDJSON stream of agent events
+    api/auth          unlock / lock live mode
+tests/                engine + agent tests (Node's built-in test runner)
 ```
 
-Stack: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, `@anthropic-ai/sdk`, Zod. No database. Snapshots are computed on request, and task edits live in the browser's localStorage.
+Stack: **Next.js 16 (App Router) + React 19, written in plain JavaScript** (ES modules; `.js` for logic, `.jsx` for components), Tailwind CSS 4, `@anthropic-ai/sdk`, Zod. There is no TypeScript; the data model is documented with JSDoc in `src/lib/types.js`. No database. Snapshots are computed on request, and task edits live in the browser's localStorage.
 
 ---
 
