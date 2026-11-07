@@ -7,6 +7,41 @@ Kinetix connects to **Gmail, Slack, Google Calendar, Notion, Jira and Linear**, 
 
 ---
 
+## Try the demo
+
+**Live site: https://kinetix-beta-two.vercel.app** — open **[/demo](https://kinetix-beta-two.vercel.app/demo)** to go straight in. No login, no setup, nothing is ever sent.
+
+You play Jordan Lee, Head of Product at Quillon, a fictional startup. It's 8:40 on a busy morning: a launch is at risk and a $480K customer renewal is on the line.
+
+**A 3-minute walkthrough**
+
+1. **Plan tab.** Read the "Now" list: the 6 things that need Jordan first. Click any task to see *why it's ranked there*. "Decide: keep or remove 'skip tour'" is one task built from the same ask in Slack, Figma, Linear and Notion.
+2. **Check the self-managing part.** Scroll to "Closed by Kinetix": tasks it closed itself because the ticket shipped or Jordan already replied. Tick a task off yourself and watch the counts update.
+3. **Signals tab.** Switch to *noise* to see the 14 items it ignored, each with a reason. The Figma comment that @-mentions Jordan is kept ("rescued") even though it's an automated email.
+4. **Ask Kinetix** (the chat panel on the right; the "Ask Kinetix" button on mobile). Click a suggestion or type one of these:
+
+| Say | What you get |
+|---|---|
+| `What should I focus on today?` | The ranked plan with reasons |
+| `Catch me up on what I missed` | Morning briefing: priorities, meetings, risks, what was auto-handled |
+| `Prepare me for the Brightline QBR` | Meeting brief: attendees and their latest messages, key context, talking points, landmines, open questions |
+| `Prepare me for the Atlas 2.0 Go/No-Go` | A second brief, built from different tools |
+| `Draft a follow-up for yesterday's design review` | A recap email built from the meeting notes, shown as a draft card with a Copy button |
+| `Reply to Olivia about the SSO issues` | A reply that pulls in the live status of the related tickets |
+| `What are the biggest risks to the Atlas launch?` | Risks ranked by severity, each with evidence and a mitigation |
+| `I sent Rachel the roadmap slide` | Marks that task done |
+| `Who is Flowstack?` | Searches every tool |
+
+5. **Meetings and Risks tabs.** Each meeting has a one-click **Prep me** (upcoming) or **Draft follow-up** (past) button, and each project has **Ask for a mitigation plan**.
+
+**Good to know for a live demo**
+
+- The assistant runs on a built-in rule-based engine, so answers are instant and free. It understands the requests in the table above (and close variations). Anything else falls back to a keyword search of the workspace. Adding `ANTHROPIC_API_KEY` in Vercel switches the chat to Claude, which can answer anything.
+- The demo clock is fixed at 8:40 AM on the current weekday (the next Monday if you open it on a weekend), so it always looks like a fresh morning.
+- Task ticks are saved in your browser only; **Reprocess** or clearing site data resets them.
+
+---
+
 ## What it does
 
 | Capability | How it works |
