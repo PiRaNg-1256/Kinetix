@@ -83,7 +83,7 @@ export function buildMeetingBrief(ws, event) {
   for (const { s } of relevant) {
     if (!attendeesRaw.includes(s.author.name)) continue;
     for (const q of sentences(s.body).filter((x) => x.endsWith("?"))) {
-      questions.push(`${firstName(s.author.name)}: “${snippet(q, 160)}”`);
+      questions.push(`${firstName(s.author.name)}: “${snippet(q.replace(/^[-*•]\s*/, ""), 160)}”`);
     }
   }
 

@@ -78,7 +78,6 @@ export async function runClaudeAgent(ws, history, emit) {
     }
     const toolUses = message.content.filter((b) => b.type === "tool_use");
     if (message.stop_reason !== "tool_use" || toolUses.length === 0) return;
-    if (message.stop_reason === "tool_use" && toolUses.length === 0) return;
 
     messages.push({ role: "assistant", content: message.content });
     const results = [];

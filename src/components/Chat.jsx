@@ -14,6 +14,12 @@ const SUGGESTIONS = [
   "Catch me up on what I missed",
 ];
 
+// crypto.randomUUID only exists on https/localhost; fall back so plain-http dev on a LAN IP works.
+const uid = () =>
+  typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
 export function Chat({ mode, overrides, onTaskUpdate, engineLabel, registerSend, onClose, suggestions = SUGGESTIONS }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -36,8 +42,8 @@ export function Chat({ mode, overrides, onTaskUpdate, engineLabel, registerSend,
       if (!content || busy) return;
       setBusy(true);
       setInput("");
-      const user = { id: crypto.randomUUID(), role: "user", text: content, steps: [], drafts: [], notices: [] };
-      const reply = { id: crypto.randomUUID(), role: "assistant", text: "", steps: [], drafts: [], notices: [], pending: true };
+      const user = { id: uid(), role: "user", text: content, steps: [], drafts: [], notices: [] };
+      const reply = { id: uid(), role: "assistant", text: "", steps: [], drafts: [], notices: [], pending: true };
       const history = [...messagesRef.current, user]
         .filter((m) => m.text.trim() && !m.error)
         .map((m) => ({ role: m.role, content: m.text }));
@@ -120,7 +126,7 @@ export function Chat({ mode, overrides, onTaskUpdate, engineLabel, registerSend,
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" aria-label="Close chat">
+          <button onClick={onClose} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 lg:hidden" aria-label="Close chat">
             <X className="h-4 w-4" />
           </button>
         )}

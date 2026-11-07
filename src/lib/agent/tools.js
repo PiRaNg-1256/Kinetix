@@ -310,10 +310,13 @@ export async function runTool(name, rawInput, ctx) {
       };
     }
     case "update_task": {
-      const task = ws.tasks.find((t) => t.id === input.task_id);
-      if (!task) return { ok: false, result: { error: "No task with that id" }, summary: "not found" };
+      const index = ws.tasks.findIndex((t) => t.id === input.task_id);
+      if (index < 0) return { ok: false, result: { error: "No task with that id" }, summary: "not found" };
       const status = input.status;
-      task.status = status;
+      // Replace instead of mutating: in live mode the task objects belong to a snapshot that is
+      // cached and shared across requests, so a mutation would leak into later requests.
+      const task = { ...ws.tasks[index], status };
+      ws.tasks[index] = task;
       ctx.emit({ type: "task_update", taskId: task.id, status });
       return { ok: true, result: { updated: task.title, status }, summary: `${status}: ${task.title}` };
     }

@@ -83,9 +83,14 @@ export function Dashboard({ mode }) {
     [storageKey],
   );
 
+  // There is exactly one <Chat>, so "Prep me" and friends always reach the visible panel.
+  const registerSend = useCallback((fn) => {
+    sendRef.current = fn;
+  }, []);
+
   const ask = useCallback((text) => {
     setChatOpen(true);
-    // Let the mobile panel mount before sending.
+    // Defer a tick so the mobile sheet is showing before the answer starts streaming.
     setTimeout(() => sendRef.current?.(text), 30);
   }, []);
 
@@ -293,37 +298,31 @@ export function Dashboard({ mode }) {
         </div>
       </main>
 
-      {/* Chat: side panel on large screens, overlay on small */}
-      <aside className="hidden w-[400px] shrink-0 border-l border-slate-200 lg:block">
+      {/* Chat: a single instance — a side panel on large screens, a bottom sheet on small ones.
+          Keeping one instance means the conversation survives closing the sheet. */}
+      {chatOpen && <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setChatOpen(false)} />}
+      <aside
+        className={`${
+          chatOpen ? "fixed inset-x-0 bottom-0 top-12 z-40 rounded-t-2xl shadow-2xl" : "hidden"
+        } overflow-hidden lg:static lg:z-auto lg:block lg:w-[400px] lg:shrink-0 lg:rounded-none lg:border-l lg:border-slate-200 lg:shadow-none`}
+      >
         <Chat
           mode={mode}
           overrides={overrides}
           onTaskUpdate={setTaskStatus}
           engineLabel={engineLabel}
-          registerSend={(fn) => (sendRef.current = fn)}
+          registerSend={registerSend}
+          onClose={() => setChatOpen(false)}
         />
       </aside>
-      {chatOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setChatOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 top-12 overflow-hidden rounded-t-2xl shadow-2xl">
-            <Chat
-              mode={mode}
-              overrides={overrides}
-              onTaskUpdate={setTaskStatus}
-              engineLabel={engineLabel}
-              registerSend={(fn) => (sendRef.current = fn)}
-              onClose={() => setChatOpen(false)}
-            />
-          </div>
-        </div>
+      {!chatOpen && (
+        <button
+          onClick={() => setChatOpen(true)}
+          className="fixed bottom-5 right-5 z-30 flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-medium text-white shadow-lg lg:hidden"
+        >
+          <MessageCircle className="h-4 w-4" /> Ask Kinetix
+        </button>
       )}
-      <button
-        onClick={() => setChatOpen(true)}
-        className="fixed bottom-5 right-5 z-30 flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-medium text-white shadow-lg lg:hidden"
-      >
-        <MessageCircle className="h-4 w-4" /> Ask Kinetix
-      </button>
     </div>
   );
 }
